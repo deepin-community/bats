@@ -1,0 +1,23 @@
+Increase tiemout for riscv64
+Author: Han Gao <gaohan@iscas.ac.cn>
+
+Index: bats-1.2.1.1/test/parallell.bats
+===================================================================
+--- bats-1.2.1.1.orig/test/parallell.bats
++++ bats-1.2.1.1/test/parallell.bats
+@@ -56,7 +56,7 @@ setup() {
+   # (Since there is no limit to load, we cannot totally avoid erroneous failures by limited tolerance.)
+   # Also check that parallelization happens across all files instead of
+   # linearizing between files, which requires at least 12s
+-  [[ "$duration" -lt 12 ]] || (echo "If this fails on Travis, make sure the failure is repeatable and not due to heavy load."; false)
++  [[ "$duration" -lt 24 ]] || (echo "If this fails on Travis, make sure the failure is repeatable and not due to heavy load."; false)
+ }
+ 
+ @test "setup_file is not over parallelized" {
+@@ -69,5 +69,5 @@ setup() {
+   # the serialization should lead to at least 6s runtime
+   [[ $duration -ge 6 ]]
+   # parallelization should at least get rid of 1/4th the total runtime
+-  [[ $duration -lt 9 ]]
++  [[ $duration -lt 12 ]]
+ }
