@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -eu
+
+export LC_ALL=C.UTF-8
+export LANGUAGE=C.UTF-8
+
+FIXTURE_ROOT="test/fixtures"
+export FIXTURE_ROOT
+
+# Exclude `root.bats`: the tests assume being run with the local `bats`.
+test_files=$(find test -maxdepth 1 -name '*.bats' | sort | grep -v 'root.bats')
+
+mkdir -p ~/.parallel && touch ~/.parallel/will-cite
+TERM=dumb /usr/bin/bats $test_files
