@@ -1,0 +1,3 @@
+Tests:
+ test-with-system-bats,
+Depends: @, parallel

@@ -1,0 +1,4 @@
+# Reported upstream: https://github.com/bats-core/bats-core/issues/666
+bats: acute-accent-in-manual-page [usr/share/man/man1/bats.1.gz:*]
+# Reported upstream: https://github.com/bats-core/bats-core/issues/666
+bats: acute-accent-in-manual-page [usr/share/man/man7/bats.7.gz:*]

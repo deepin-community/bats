@@ -1,17 +1,20 @@
 Source: bats
-Section: shells
+Section: devel
 Priority: optional
-Maintainer: Yaroslav Halchenko <debian@onerussian.com>
-Build-Depends: debhelper (>= 9), parallel
-Standards-Version: 4.3.0
+Maintainer: Debian Bats team <team+bats@tracker.debian.org>
+Uploaders: Yaroslav Halchenko <debian@onerussian.com>, Gioele Barabucci <gioele@svario.it>
+Build-Depends: debhelper-compat (= 12), parallel
+Standards-Version: 4.6.2
 Homepage: https://github.com/bats-core/bats-core
-Vcs-Git: https://github.com/neurodebian/bats -b debian
-Vcs-Browser: https://github.com/neurodebian/bats
+Vcs-Git: https://salsa.debian.org/bats-team/bats.git
+Vcs-Browser: https://salsa.debian.org/bats-team/bats
+Rules-Requires-Root: no
 
 Package: bats
 Architecture: all
 Depends: ${misc:Depends}
 Recommends: parallel
+Multi-Arch: foreign
 Description: bash automated testing system
  Bats is a TAP-compliant testing framework for Bash. It provides a
  simple way to verify that the UNIX programs you write behave as

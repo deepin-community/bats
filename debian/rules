@@ -9,12 +9,13 @@ export HOME=$(shell mktemp -d)
 %:
 	dh $@
 
+override_dh_clean:
+	dh_clean
+	rm -f test/.bats/run-logs/*.log
+
 override_dh_auto_install:
 	./install.sh debian/bats/usr
 
 override_dh_auto_test:
-ifneq (,$(filter riscv64,$(DEB_BUILD_ARCH)))
-	patch -p1 < debian/patches/fix-riscv-build.patch
-endif
 	mkdir -p ~/.parallel && touch ~/.parallel/will-cite
-	TERM=dumb bin/bats --tap test
+	LC_ALL=C.UTF-8 LANGUAGE=C.UTF-8 TERM=dumb bin/bats --tap test
