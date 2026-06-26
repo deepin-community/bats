@@ -93,7 +93,7 @@ To run a single test file:
 bin/bats test/file.bats
 ```
 
-When running from a teminal, Bats uses the *pretty* formatter by default.
+When running from a terminal, Bats uses the *pretty* formatter by default.
 However, to debug Bats you might need to see the raw test output. 
 The **cat** formatter is intended as an internal debugging tool because
 it does not process test outputs.
@@ -101,7 +101,7 @@ To use it, run Bats with the `--formatter cat` option.
 
 ## Coding conventions
 
-Use (`shfmt`)[https://github.com/mvdan/sh#shfmt] and [ShellCheck](https://www.shellcheck.net/). The CI will enforce this.
+Use [`shfmt`](https://github.com/mvdan/sh#shfmt) and [ShellCheck](https://www.shellcheck.net/). The CI will enforce this.
 
 Use `snake_case` for all identifiers.
 

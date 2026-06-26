@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-export BATS_VERSION='1.10.0'
+export BATS_VERSION='1.11.1'
 VALID_FORMATTERS="pretty, junit, tap, tap13"
 
 version() {
@@ -113,7 +113,6 @@ BATS_LIBEXEC="$(
 )"
 export BATS_LIBEXEC
 export BATS_CWD="$PWD"
-export BATS_TEST_FILTER=
 export PATH="$BATS_LIBEXEC:$PATH"
 export BATS_ROOT_PID=$$
 export BATS_TMPDIR="${TMPDIR:-/tmp}"
@@ -486,7 +485,7 @@ if [[ -n "$setup_suite_file" ]]; then
 fi
 
 # shellcheck source=lib/bats-core/validator.bash
-source "$BATS_ROOT/lib/bats-core/validator.bash"
+source "$BATS_ROOT/$BATS_LIBDIR/bats-core/validator.bash"
 
 trap 'BATS_INTERRUPTED=true' INT # let the lower levels handle the interruption
 

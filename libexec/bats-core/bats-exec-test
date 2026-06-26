@@ -79,9 +79,11 @@ bats_create_test_tmpdirs() {
 
 # load the test helper functions like `load` or `run` that are needed to run a (preprocessed) .bats file without bash errors
 # shellcheck source=lib/bats-core/test_functions.bash disable=SC2153
-source "$BATS_ROOT/lib/bats-core/test_functions.bash"
+source "$BATS_ROOT/$BATS_LIBDIR/bats-core/test_functions.bash"
+_bats_test_functions_setup "$BATS_TEST_NUMBER"
+
 # shellcheck source=lib/bats-core/tracing.bash disable=SC2153
-source "$BATS_ROOT/lib/bats-core/tracing.bash"
+source "$BATS_ROOT/$BATS_LIBDIR/bats-core/tracing.bash"
 
 bats_teardown_trap() {
   bats_check_status_from_trap
@@ -89,8 +91,10 @@ bats_teardown_trap() {
 
   # `bats_teardown_trap` is always called with one parameter (BATS_TEARDOWN_STARTED)
   # The second parameter is optional and corresponds for to the killer pid
-  # that will be forwarded to the exit trap to kill it if necesary
+  # that will be forwarded to the exit trap to kill it if necessary
   local killer_pid=${2:-}
+
+  bats_set_stacktrace_limit
 
   # mark the start of this function to distinguish where skip is called
   # parameter 1 will signify the reason why this function was called
@@ -109,7 +113,7 @@ bats_teardown_trap() {
 }
 
 # shellcheck source=lib/bats-core/common.bash
-source "$BATS_ROOT/lib/bats-core/common.bash"
+source "$BATS_ROOT/$BATS_LIBDIR/bats-core/common.bash"
 
 bats_exit_trap() {
   local status
@@ -200,7 +204,7 @@ bats_exit_trap() {
     if [[ -n "$should_retry" ]]; then
       try_suffix="-try$BATS_TEST_TRY_NUMBER"
     fi
-    cp "$BATS_OUT" "$BATS_GATHER_TEST_OUTPUTS_IN/$BATS_SUITE_TEST_NUMBER$try_suffix-${BATS_TEST_DESCRIPTION/\//%2F}.log"
+    cp "$BATS_OUT" "$BATS_GATHER_TEST_OUTPUTS_IN/$BATS_SUITE_TEST_NUMBER$try_suffix-${BATS_TEST_DESCRIPTION//\//%2F}.log"
   fi
   rm -f "$BATS_OUT"
   exit "$status"
@@ -269,7 +273,7 @@ bats_start_timeout_countdown() { # <timeout>
   # Start another process to kill the children of this process
   (
     sleep "$timeout" &
-    # sleep won't recieve signals, so we use wait below
+    # sleep won't receive signals, so we use wait below
     # and kill sleep explicitly when signalled to do so
     # shellcheck disable=SC2064
     trap "kill $!; exit 0" ABRT
@@ -310,7 +314,7 @@ get_mills_since_epoch() { # <output-variable>
 fi
 
 bats_perform_test() {
-  if ! declare -F "$BATS_TEST_NAME" &>/dev/null; then
+  if ! declare -F "${BATS_TEST_NAME%% *}" &>/dev/null; then
     local quoted_test_name
     bats_quote_code quoted_test_name "$BATS_TEST_NAME"
     printf "bats: unknown test name %s\n" "$quoted_test_name" >&2
@@ -340,8 +344,16 @@ bats_perform_test() {
   # shellcheck disable=SC2064
   trap "bats_teardown_trap as-exit-trap $BATS_killer_pid" EXIT
 
+  if [[ -n "$BATS_EXTENDED_SYNTAX" ]]; then
+    printf 'begin %d %s\n' "$BATS_SUITE_TEST_NUMBER" "${BATS_TEST_NAME_PREFIX:-}$BATS_TEST_DESCRIPTION" >&3
+  fi
+
   get_mills_since_epoch BATS_TEST_START_TIME
-  "$BATS_TEST_NAME" >>"$BATS_OUT" 2>&1 4>&1
+  {
+    bats_set_stacktrace_limit
+    setup "$@"
+    "$@"
+  } >>"$BATS_OUT" 2>&1 4>&1
 
   BATS_TEST_COMPLETED=1
   # shellcheck disable=SC2064
@@ -352,12 +364,14 @@ bats_perform_test() {
 trap bats_interrupt_trap INT
 
 # shellcheck source=lib/bats-core/preprocessing.bash
-source "$BATS_ROOT/lib/bats-core/preprocessing.bash"
+source "$BATS_ROOT/$BATS_LIBDIR/bats-core/preprocessing.bash"
 
 exec 3<&1
 
 bats_create_test_tmpdirs
-# Run the given test.
 bats_evaluate_preprocessed_source
+
 readonly BATS_TEST_TAGS
-bats_perform_test
+
+# use eval to parse (internally quoted!) test command into parameters
+bats_perform_test "${BATS_TEST_COMMAND[@]}"
