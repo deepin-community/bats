@@ -1,4 +1,4 @@
 version=4
-opts="filenamemangle=s%(?:.*?)?v?@ANY_VERSION@(@ARCHIVE_EXT@)%@PACKAGE@-$1$2%" \
+opts="filenamemangle=s%(?:.*?)?v?@ANY_VERSION@(@ARCHIVE_EXT@)%@PACKAGE@-$1$2%, versionmangle=s/-RC/~rc/" \
     https://github.com/bats-core/bats-core/tags \
     (?:.*?/)v?@ANY_VERSION@@ARCHIVE_EXT@

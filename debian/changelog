@@ -1,3 +1,32 @@
+bats (1.11.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Gioele Barabucci <gioele@svario.it>  Tue, 03 Dec 2024 22:28:41 +0100
+
+bats (1.11.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Acknowledge RC releases in experimental; upload to unstable
+
+ -- Gioele Barabucci <gioele@svario.it>  Wed, 27 Mar 2024 12:54:04 +0100
+
+bats (1.11.0~rc2-1) experimental; urgency=medium
+
+  * New upstream release candidate
+  * d/patches: Drop patches merged upstream
+
+ -- Gioele Barabucci <gioele@svario.it>  Thu, 22 Feb 2024 10:00:25 +0100
+
+bats (1.11.0~rc1-1) experimental; urgency=medium
+
+  * New upstream release candidate
+  * d/patches: Add patch for unused directory /usr/share/bats
+  * d/watch: Treat -RC tags as pre-releases
+  * d/gbp.conf: Use debian/experimental as Debian branch
+
+ -- Gioele Barabucci <gioele@svario.it>  Fri, 02 Feb 2024 15:53:59 +0100
+
 bats (1.10.0-1) unstable; urgency=medium
 
   * New upstream release
